@@ -2,10 +2,6 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai
 import uuid
-import random
-
-# List of food emojis
-food_emojis = ["🍔", "🍕", "🌮", "🍣", "🍜", "🍝", "🍱", "🍛", "🥘", "🍲"]
 
 # Configure Gemini (make sure to use st.secrets for the API key in production)
 genai.configure(api_key="AIzaSyB8tt8BfYxAQxKrZZidMo_RwIe1V2p0edE")
@@ -96,61 +92,6 @@ def rag_with_data_query(prompt, chat_id):
     except Exception as e:
         return str(e), None, None
 
-def get_food_loader_html():
-    food_emoji = random.choice(food_emojis)
-    return f"""
-    <div class="food-loader">
-        <style>
-            .food-loader {{
-                display: inline-block;
-                position: relative;
-                width: 80px;
-                height: 80px;
-            }}
-            .food-loader div {{
-                position: absolute;
-                top: 33px;
-                width: 13px;
-                height: 13px;
-                border-radius: 50%;
-                background: #1E90FF;
-                animation-timing-function: cubic-bezier(0, 1, 1, 0);
-            }}
-            .food-loader div:nth-child(1) {{
-                left: 8px;
-                animation: food-loader1 0.6s infinite;
-            }}
-            .food-loader div:nth-child(2) {{
-                left: 8px;
-                animation: food-loader2 0.6s infinite;
-            }}
-            .food-loader div:nth-child(3) {{
-                left: 32px;
-                animation: food-loader2 0.6s infinite;
-            }}
-            .food-loader div:nth-child(4) {{
-                left: 56px;
-                animation: food-loader3 0.6s infinite;
-            }}
-            @keyframes food-loader1 {{
-                0% {{ transform: scale(0); }}
-                100% {{ transform: scale(1); }}
-            }}
-            @keyframes food-loader3 {{
-                0% {{ transform: scale(1); }}
-                100% {{ transform: scale(0); }}
-            }}
-            @keyframes food-loader2 {{
-                0% {{ transform: translate(0, 0); }}
-                100% {{ transform: translate(24px, 0); }}
-            }}
-        </style>
-        <div></div><div></div><div></div><div></div>
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px;">
-            {food_emoji}
-        </div>
-    </div>
-    """
 
 # Define suggested questions
 suggested_questions = [
@@ -180,6 +121,10 @@ with st.sidebar:
         if st.button(chat_data["name"], key=f"chat_{chat_id}"):
             st.session_state.current_chat_id = chat_id
 
+ #   st.subheader("Dataset Information")
+  #  st.write(f"Total restaurants: {len(df)}")
+  #  st.write(f"Columns: {', '.join(df.columns)}")
+
 # Main chat area
 if st.session_state.current_chat_id:
     st.subheader(f"Current Chat: {st.session_state.chats[st.session_state.current_chat_id]['name']}")
@@ -195,9 +140,7 @@ if st.session_state.current_chat_id:
     for question in suggested_questions:
         if st.button(question):
             user_prompt = question
-            food_loader = st.empty()
-            food_loader.markdown(get_food_loader_html(), unsafe_allow_html=True)
-            try:
+            with st.spinner("Generating recommendations..."):
                 query, result_df, response = rag_with_data_query(user_prompt, st.session_state.current_chat_id)
                 
                 # Add the new query and results to the chat history
@@ -206,20 +149,27 @@ if st.session_state.current_chat_id:
                 # Display the latest result
                 st.subheader("Latest Result")
                 st.write(f"Prompt: {user_prompt}")
+                st.subheader("Generated Query")
+                st.code(query, language="python")
+                
+                if result_df is not None:
+                    st.subheader("Query Result")
+                    st.dataframe(result_df)
+                
                 st.subheader("Final Response")
                 st.markdown(response)
-            finally:
-                food_loader.empty()
+
+            # Force a rerun to update the chat history display
+        #    st.experimental_rerun()
 
     # Create a form for the input and button
     with st.form(key='query_form'):
         user_prompt = st.text_input("Enter your query about restaurants:")
         submit_button = st.form_submit_button("Get Recommendations")
 
+
     if submit_button and user_prompt:
-        food_loader = st.empty()
-        food_loader.markdown(get_food_loader_html(), unsafe_allow_html=True)
-        try:
+        with st.spinner("Generating recommendations..."):
             query, result_df, response = rag_with_data_query(user_prompt, st.session_state.current_chat_id)
             
             # Add the new query and results to the chat history
@@ -228,10 +178,15 @@ if st.session_state.current_chat_id:
             # Display the latest result
             st.subheader("Latest Result")
             st.write(f"Prompt: {user_prompt}")
+          #  st.subheader("Generated Query")
+           # st.code(query, language="python")
+            
+ #           if result_df is not None:
+            #    st.subheader("Query Result")
+             #   st.dataframe(result_df)
+            
             st.subheader("Final Response")
             st.markdown(response)
-        finally:
-            food_loader.empty()
 
         # Force a rerun to update the chat history display
         st.experimental_rerun()

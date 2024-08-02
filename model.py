@@ -189,6 +189,6 @@ if st.session_state.current_chat_id:
             st.markdown(response)
 
         # Force a rerun to update the chat history display
-        st.experimental_rerun()
+    #    st.experimental_rerun()
 else:
     st.info("Please create a new chat or select an existing one from the sidebar.")

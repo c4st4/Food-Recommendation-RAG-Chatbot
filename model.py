@@ -181,7 +181,7 @@ if st.session_state.current_chat_id:
           #  st.subheader("Generated Query")
            # st.code(query, language="python")
             
-            if result_df is not None:
+ #           if result_df is not None:
             #    st.subheader("Query Result")
              #   st.dataframe(result_df)
             

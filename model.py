@@ -160,7 +160,7 @@ if st.session_state.current_chat_id:
                 st.markdown(response)
 
             # Force a rerun to update the chat history display
-            st.experimental_rerun()
+        #    st.experimental_rerun()
 
     # Create a form for the input and button
     with st.form(key='query_form'):

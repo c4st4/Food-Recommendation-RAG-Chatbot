@@ -96,9 +96,10 @@ def rag_with_data_query(prompt, chat_id):
 
 # Define suggested questions
 suggested_questions = [
+
     "What are some good Pakistani restaurants in F-10?",
     "what are some good pasta serving restaurants in f-6",
-    "Recommend me some good roll paratha restaurants "
+    "what are some good roll paratha restaurants"
 ]
 
 # Initialize session state for storing chats

@@ -149,12 +149,12 @@ if st.session_state.current_chat_id:
                 # Display the latest result
                 st.subheader("Latest Result")
                 st.write(f"Prompt: {user_prompt}")
-                st.subheader("Generated Query")
-                st.code(query, language="python")
+              #  st.subheader("Generated Query")
+              #  st.code(query, language="python")
                 
-                if result_df is not None:
-                    st.subheader("Query Result")
-                    st.dataframe(result_df)
+             #   if result_df is not None:
+             #       st.subheader("Query Result")
+             #       st.dataframe(result_df)
                 
                 st.subheader("Final Response")
                 st.markdown(response)
@@ -169,7 +169,7 @@ if st.session_state.current_chat_id:
 
 
     if submit_button and user_prompt:
-        with st.spinner("Generating recommendations..."):
+        with st.spinner("Generating     recommendations..."):
             query, result_df, response = rag_with_data_query(user_prompt, st.session_state.current_chat_id)
             
             # Add the new query and results to the chat history

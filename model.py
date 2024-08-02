@@ -121,9 +121,9 @@ with st.sidebar:
         if st.button(chat_data["name"], key=f"chat_{chat_id}"):
             st.session_state.current_chat_id = chat_id
 
-    st.subheader("Dataset Information")
-    st.write(f"Total restaurants: {len(df)}")
-    st.write(f"Columns: {', '.join(df.columns)}")
+ #   st.subheader("Dataset Information")
+  #  st.write(f"Total restaurants: {len(df)}")
+  #  st.write(f"Columns: {', '.join(df.columns)}")
 
 # Main chat area
 if st.session_state.current_chat_id:
@@ -178,12 +178,12 @@ if st.session_state.current_chat_id:
             # Display the latest result
             st.subheader("Latest Result")
             st.write(f"Prompt: {user_prompt}")
-            st.subheader("Generated Query")
-            st.code(query, language="python")
+          #  st.subheader("Generated Query")
+           # st.code(query, language="python")
             
             if result_df is not None:
-                st.subheader("Query Result")
-                st.dataframe(result_df)
+            #    st.subheader("Query Result")
+             #   st.dataframe(result_df)
             
             st.subheader("Final Response")
             st.markdown(response)

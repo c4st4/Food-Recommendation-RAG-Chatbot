@@ -70,6 +70,7 @@ def generate_response(prompt, context, chat_history):
     Do not mention any downfalls or limitations.
     If the prompt is not related to restaurants, respond with: 'This query is not related to restaurants.'.
     If the pandas operation returned an empty DataFrame, respond with: "I couldn't find any restaurants that match the criteria."
+    Provide the address for all the restaurants in the result.
     Response:
     """
     response = model.generate_content(response_prompt)
@@ -96,7 +97,8 @@ def rag_with_data_query(prompt, chat_id):
 # Define suggested questions
 suggested_questions = [
     "What are some good Pakistani restaurants in F-10?",
-    "Which are some restaurants that serve good beef burgers in I-8?"
+    "what are some good pasta serving restaurants in f-6"
+    "recommend me some good roll paratha spots "
 ]
 
 # Initialize session state for storing chats

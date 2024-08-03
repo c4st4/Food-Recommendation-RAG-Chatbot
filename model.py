@@ -22,6 +22,8 @@ def generate_query(prompt, sample_data, columns, context):
     All restaurants are in the Islamabad area.
     If the prompt has an specific area mentioned for example F-11 then also search for the area with the name F11, the sector is given in the addresses.
     If an address is given in the prompt only give restaurants in that area.
+    For food items or cuisines, search in the 'tags' column using partial string matching.
+    If the prompt mentions 'good' or 'best', consider restaurants with ratings above 4.0.
     Sample data (5 random rows):
     {sample_data}
     Available columns:

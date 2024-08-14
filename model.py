@@ -168,7 +168,7 @@ if st.session_state.current_chat_id:
              #       st.dataframe(result_df)
                 
                 st.subheader("Final Response")
-                st.write(query)
+           #     st.write(query)
                 st.markdown(response)
 
             # Force a rerun to update the chat history display

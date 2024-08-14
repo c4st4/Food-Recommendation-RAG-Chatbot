@@ -4,12 +4,12 @@ import google.generativeai as genai
 import uuid
 
 # Configure Gemini (make sure to use st.secrets for the API key in production)
-genai.configure(api_key="AIzaSyB8tt8BfYxAQxKrZZidMo_RwIe1V2p0edE")
+genai.configure(api_key="AIzaSyAmK6R8MhwYdHCESNDmcP2IwypCHx_EJeI")
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Load your data without caching
 def load_data():
-    return pd.read_csv('data.csv')
+    return pd.read_csv('data1.csv')
 
 df = load_data()
 
@@ -18,12 +18,17 @@ def generate_query(prompt, sample_data, columns, context):
     Given the following prompt, sample data, column names from a DataFrame, and previous context, generate a pandas DataFrame operation to answer the question:
     Rating of restaurant is in decimals, like 4.5, 4.6, 5.0. Give all the columns of the dataset in the result.
     The number of reviews of a restaurant are given under the column number of reviews.
+    Make sure the pandas operation only returns 400 rows at max.
     The tags column are what main items and cusine the restaurant serves.
     All restaurants are in the Islamabad area.
-    If the prompt has an specific area mentioned for example F-11 then also search for the area with the name F11, the sector is given in the addresses.
+    If the prompt has an specific area mentioned for example F-11 then also search for the area without the hyphen e.g 'F11' or 'F 11', the sector is given in the addresses.
     If an address is given in the prompt only give restaurants in that area.
-    For food items or cuisines, search in the 'tags' column using partial string matching.
-    If the prompt mentions 'good' or 'best', consider restaurants with ratings above 4.0.
+    For food items or cuisines, search in the 'tags' and 'name' column using partial string matching.
+    If the prompt mentions 'good' or 'best', consider restaurants with ratings above 4.5.
+    You can also be asked food that is within a specific price range you can see the price in the 'price' column.
+    When asked about 'Desserts' also search for ice cream and cakes in 'name' and 'tags' the pandas operation.
+    
+    
     Sample data (5 random rows):
     {sample_data}
     Available columns:
@@ -41,6 +46,7 @@ def generate_query(prompt, sample_data, columns, context):
     df.loc[df['column_name'] > value, ['column1', 'column2']]
     """
     response = model.generate_content(query_prompt)
+    st.write(response.text.strip())
     return response.text.strip()
 
 def execute_query(query):
@@ -59,7 +65,6 @@ def execute_query(query):
 
 def query_to_context(df_result):
     return df_result.to_string(index=False)
-
 def generate_response(prompt, context, chat_history):
     response_prompt = f"""
     Given the following data, prompt, and chat history, provide a comprehensive and detailed answer:
@@ -68,7 +73,7 @@ def generate_response(prompt, context, chat_history):
     Prompt: {prompt}
     Chat History:
     {chat_history}
-    Please provide a thorough analysis of the data in relation to the prompt and chat history. Include specific examples from the data, explain any trends or patterns you notice, and offer insights that would be valuable to someone interested in this information. Your response should be well-structured and informative
+    Please provide a short analysis of the data in relation to the prompt and chat history. Include specific examples from the data, explain any trends or patterns you notice, and offer insights that would be valuable to someone interested in this information. Your response should be well-structured and informative
     Do not mention any downfalls or limitations.
     If the prompt is not related to restaurants, respond with: 'This query is not related to restaurants.'.
     If the pandas operation returned an empty DataFrame, respond with: "I couldn't find any restaurants that match the criteria."
@@ -94,13 +99,13 @@ def rag_with_data_query(prompt, chat_id):
         
         return query, result_df, response
     except Exception as e:
-        return str(e), None, None
+        return str(e), str(e), str(e)
 
 
 # Define suggested questions
 suggested_questions = [
     "What are some good Pakistani restaurants in F-10?",
-    "what are some good pasta serving restaurants in f-6"
+    "Which are the best restaurants for beef burgers in f11?"
 ]
 
 # Initialize session state for storing chats
@@ -146,7 +151,7 @@ if st.session_state.current_chat_id:
             user_prompt = question
             with st.spinner("Generating recommendations..."):
                 query, result_df, response = rag_with_data_query(user_prompt, st.session_state.current_chat_id)
-                
+          #      print(query)
                 # Add the new query and results to the chat history
                 st.session_state.chats[st.session_state.current_chat_id]['history'].append((user_prompt, response))
                 
@@ -161,6 +166,7 @@ if st.session_state.current_chat_id:
              #       st.dataframe(result_df)
                 
                 st.subheader("Final Response")
+                st.write(query)
                 st.markdown(response)
 
             # Force a rerun to update the chat history display

@@ -188,8 +188,8 @@ if st.session_state.current_chat_id:
             st.session_state.chats[st.session_state.current_chat_id]['history'].append((user_prompt, response))
             
             # Display the latest result
-            st.subheader("Latest Result")
-            st.write(f"Prompt: {user_prompt}")
+       #     st.subheader("Latest Result")
+      #      st.write(f"Prompt: {user_prompt}")
           #  st.subheader("Generated Query")
            # st.code(query, language="python")
             

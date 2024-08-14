@@ -48,7 +48,7 @@ def generate_query(prompt, sample_data, columns, context):
     df.loc[df['column_name'] > value, ['column1', 'column2']]
     """
     response = model.generate_content(query_prompt)
-    st.write(response.text.strip())
+  #  st.write(response.text.strip())
     return response.text.strip()
 
 def execute_query(query):

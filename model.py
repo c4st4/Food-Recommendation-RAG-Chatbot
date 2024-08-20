@@ -118,7 +118,7 @@ if 'current_chat_id' not in st.session_state:
     st.session_state.current_chat_id = None
 
 # Streamlit UI
-st.title("Restaurant Recommendation RAG Model")
+st.title("Restaurant Recommendation Chatbot")
 
 # Sidebar for chat management
 with st.sidebar:

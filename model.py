@@ -151,7 +151,7 @@ if st.session_state.current_chat_id:
     for question in suggested_questions:
         if st.button(question):
             user_prompt = question
-            with st.spinner("Generating recommendations..."):
+            with st.spinner("Cooking Up Recommendations..."):
                 query, result_df, response = rag_with_data_query(user_prompt, st.session_state.current_chat_id)
           #      print(query)
                 # Add the new query and results to the chat history
